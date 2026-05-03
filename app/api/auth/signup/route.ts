@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
+import { getDatabaseConfigMessage, isPrismaConnectionError } from '@/lib/database-error';
 
 export async function POST(req: NextRequest) {
   try {
@@ -29,6 +30,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ user, message: 'Account created successfully' }, { status: 201 });
   } catch (err) {
     console.error(err);
+
+    if (isPrismaConnectionError(err)) {
+      return NextResponse.json({ error: getDatabaseConfigMessage() }, { status: 503 });
+    }
+
     return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
   }
 }

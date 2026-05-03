@@ -30,7 +30,7 @@ export const authOptions: NextAuthOptions = {
         }
 
         if (!hasDatabaseUrl) {
-          throw new Error('Authentication is not configured yet');
+          throw new Error(getDatabaseConfigMessage());
         }
 
         let user;
