@@ -1,0 +1,1 @@
+NIX_PACKS_BUILD_CMD=npm install
