@@ -1,6 +1,6 @@
 {
-"build": {
-            "builder":"NIXPACKS",
-            "buildCommand":"npm install"
-}
+  "build": {
+    "builder": "RAILPACK",
+    "buildCommand": "npm run build"
+  }
 }
