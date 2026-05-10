@@ -8,8 +8,15 @@ import Link from 'next/link';
 import Script from 'next/script';
 
 interface Address {
-  id: string; name: string; phone: string;
-  line1: string; line2?: string; city: string; state: string; pincode: string; isDefault: boolean;
+  id: string;
+  name: string;
+  phone: string;
+  line1: string;
+  line2?: string;
+  city: string;
+  state: string;
+  pincode: string;
+  isDefault: boolean;
 }
 
 export default function CheckoutPage() {
@@ -79,7 +86,7 @@ export default function CheckoutPage() {
       key: orderData.keyId,
       amount: Math.round(orderData.amount * 100),
       currency: 'INR',
-      name: 'Roots of Country',
+      name: 'Desi Roots',
       description: 'Indian Ethnic Wear',
       order_id: orderData.razorpayOrderId,
       handler: async (response: any) => {
@@ -100,7 +107,7 @@ export default function CheckoutPage() {
         }
       },
       prefill: { name: session?.user?.name, email: session?.user?.email },
-      theme: { color: '#b8621f' },
+      theme: { color: '#22160d' },
       modal: { ondismiss: () => setLoading(false) },
     };
 
@@ -111,10 +118,12 @@ export default function CheckoutPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
-        <p className="text-6xl mb-4">🛒</p>
-        <h2 className="font-display text-2xl font-bold text-stone-700 mb-3">Your cart is empty</h2>
-        <Link href="/products" className="btn-primary">Shop Now</Link>
+      <div className="section-shell flex min-h-[60vh] flex-col items-center justify-center text-center">
+        <div className="card mesh-panel max-w-xl px-8 py-14">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Checkout is waiting</p>
+          <h2 className="mt-4 font-display text-5xl text-stone-900">Your bag needs a few pieces first.</h2>
+          <Link href="/products" className="btn-primary mt-8">Shop now</Link>
+        </div>
       </div>
     );
   }
@@ -123,161 +132,185 @@ export default function CheckoutPage() {
     <>
       <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-        <h1 className="font-display text-3xl font-bold text-stone-800 mb-8">Checkout</h1>
-
-        {/* Steps */}
-        <div className="flex items-center gap-4 mb-8 text-sm">
-          {['address', 'review'].map((s, i) => (
-            <div key={s} className="flex items-center gap-2">
-              <span className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                step === s || (i === 0 && step === 'review') ? 'bg-brand-600 text-white' : 'bg-stone-200 text-stone-500'
-              }`}>{i + 1}</span>
-              <span className={step === s ? 'font-semibold text-stone-800' : 'text-stone-500'}>
-                {s === 'address' ? 'Delivery Address' : 'Review & Pay'}
-              </span>
-              {i < 1 && <span className="text-stone-300 mx-1">→</span>}
+      <div className="pb-10">
+        <section className="section-shell pt-8">
+          <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div>
+              <span className="eyebrow">Checkout</span>
+              <h1 className="mt-4 font-display text-5xl leading-none text-stone-900 sm:text-6xl">Finish your order with a cleaner flow.</h1>
+              <p className="mt-3 section-copy">Same functionality, smoother experience. Select an address, review your items, and pay securely.</p>
             </div>
-          ))}
-        </div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Left */}
-          <div className="flex-1">
-            {step === 'address' && (
-              <div className="space-y-4">
-                <h2 className="font-semibold text-stone-800 text-lg">Select Delivery Address</h2>
-
-                {addresses.map((addr) => (
-                  <label key={addr.id} className={`card p-4 flex gap-3 cursor-pointer transition-colors ${
-                    selectedAddress === addr.id ? 'border-brand-500 bg-brand-50' : 'hover:border-stone-300'
-                  }`}>
-                    <input type="radio" name="address" value={addr.id} checked={selectedAddress === addr.id}
-                      onChange={() => setSelectedAddress(addr.id)} className="mt-1 accent-brand-600" />
-                    <div className="text-sm">
-                      <p className="font-medium text-stone-800">{addr.name}</p>
-                      <p className="text-stone-600">{addr.line1}{addr.line2 ? `, ${addr.line2}` : ''}</p>
-                      <p className="text-stone-600">{addr.city}, {addr.state} – {addr.pincode}</p>
-                      <p className="text-stone-500">📱 {addr.phone}</p>
-                    </div>
-                  </label>
-                ))}
-
-                <button onClick={() => setShowAddressForm(!showAddressForm)}
-                  className="btn-secondary w-full text-center text-sm">
-                  + Add New Address
-                </button>
-
-                {showAddressForm && (
-                  <form onSubmit={handleSaveAddress} className="card p-5 space-y-3">
-                    <h3 className="font-semibold text-stone-800">New Address</h3>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div><label className="label text-xs">Full Name</label>
-                        <input className="input-field text-sm !py-2" placeholder="Name" value={newAddress.name}
-                          onChange={e => setNewAddress({...newAddress, name: e.target.value})} required /></div>
-                      <div><label className="label text-xs">Phone</label>
-                        <input className="input-field text-sm !py-2" placeholder="10-digit number" value={newAddress.phone}
-                          onChange={e => setNewAddress({...newAddress, phone: e.target.value})} required /></div>
-                    </div>
-                    <div><label className="label text-xs">Address Line 1</label>
-                      <input className="input-field text-sm !py-2" placeholder="House/Flat, Street" value={newAddress.line1}
-                        onChange={e => setNewAddress({...newAddress, line1: e.target.value})} required /></div>
-                    <div><label className="label text-xs">Address Line 2 (Optional)</label>
-                      <input className="input-field text-sm !py-2" placeholder="Landmark, Area" value={newAddress.line2}
-                        onChange={e => setNewAddress({...newAddress, line2: e.target.value})} /></div>
-                    <div className="grid grid-cols-3 gap-3">
-                      <div><label className="label text-xs">City</label>
-                        <input className="input-field text-sm !py-2" placeholder="City" value={newAddress.city}
-                          onChange={e => setNewAddress({...newAddress, city: e.target.value})} required /></div>
-                      <div><label className="label text-xs">State</label>
-                        <input className="input-field text-sm !py-2" placeholder="State" value={newAddress.state}
-                          onChange={e => setNewAddress({...newAddress, state: e.target.value})} required /></div>
-                      <div><label className="label text-xs">Pincode</label>
-                        <input className="input-field text-sm !py-2" placeholder="6-digit" value={newAddress.pincode}
-                          onChange={e => setNewAddress({...newAddress, pincode: e.target.value})} required /></div>
-                    </div>
-                    <label className="flex items-center gap-2 text-sm text-stone-600">
-                      <input type="checkbox" className="accent-brand-600" checked={newAddress.isDefault}
-                        onChange={e => setNewAddress({...newAddress, isDefault: e.target.checked})} />
-                      Set as default address
-                    </label>
-                    <div className="flex gap-2">
-                      <button type="submit" className="btn-primary text-sm">Save Address</button>
-                      <button type="button" onClick={() => setShowAddressForm(false)} className="btn-secondary text-sm">Cancel</button>
-                    </div>
-                  </form>
-                )}
-
-                <button onClick={() => { if (selectedAddress) setStep('review'); else alert('Please select an address'); }}
-                  disabled={!selectedAddress}
-                  className="btn-primary w-full text-center disabled:opacity-50 mt-2">
-                  Continue to Review
-                </button>
-              </div>
-            )}
-
-            {step === 'review' && (
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <button onClick={() => setStep('address')} className="text-brand-600 text-sm hover:underline">← Change Address</button>
+            <div className="flex flex-wrap gap-3">
+              {[
+                { key: 'address', label: 'Address', active: step === 'address' || step === 'review' },
+                { key: 'review', label: 'Review & Pay', active: step === 'review' },
+              ].map((item, index) => (
+                <div key={item.key} className={`rounded-full px-4 py-2 text-sm font-semibold ${item.active ? 'bg-stone-900 text-white' : 'bg-white/70 text-stone-500'}`}>
+                  {index + 1}. {item.label}
                 </div>
+              ))}
+            </div>
+          </div>
 
-                {/* Selected address */}
-                {addresses.find(a => a.id === selectedAddress) && (
-                  <div className="card p-4 border-brand-300 bg-brand-50">
-                    <p className="text-xs text-brand-600 font-medium mb-1">Delivering to</p>
-                    {(() => {
-                      const a = addresses.find(addr => addr.id === selectedAddress)!;
-                      return <p className="text-sm text-stone-700">{a.name}, {a.line1}, {a.city}, {a.state} – {a.pincode}</p>;
-                    })()}
+          <div className="grid gap-6 lg:grid-cols-[1fr,360px]">
+            <div className="space-y-6">
+              {step === 'address' && (
+                <>
+                  <div className="card p-6 sm:p-7">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">Delivery</p>
+                        <h2 className="mt-2 text-2xl font-extrabold text-stone-900">Choose where it should arrive.</h2>
+                      </div>
+                      <button onClick={() => setShowAddressForm(!showAddressForm)} className="btn-secondary">
+                        {showAddressForm ? 'Hide form' : 'Add address'}
+                      </button>
+                    </div>
+
+                    <div className="mt-6 grid gap-4">
+                      {addresses.map((addr) => (
+                        <label key={addr.id} className={`cursor-pointer rounded-[26px] border p-5 transition-all ${selectedAddress === addr.id ? 'border-stone-900 bg-stone-900 text-white' : 'border-stone-200 bg-white/70 hover:border-stone-300'}`}>
+                          <div className="flex gap-3">
+                            <input type="radio" name="address" value={addr.id} checked={selectedAddress === addr.id} onChange={() => setSelectedAddress(addr.id)} className="mt-1 accent-stone-900" />
+                            <div className="text-sm">
+                              <p className={`font-semibold ${selectedAddress === addr.id ? 'text-white' : 'text-stone-900'}`}>{addr.name}</p>
+                              <p className={selectedAddress === addr.id ? 'text-stone-200' : 'text-stone-600'}>{addr.line1}{addr.line2 ? `, ${addr.line2}` : ''}</p>
+                              <p className={selectedAddress === addr.id ? 'text-stone-200' : 'text-stone-600'}>{addr.city}, {addr.state} - {addr.pincode}</p>
+                              <p className={selectedAddress === addr.id ? 'text-stone-300' : 'text-stone-500'}>{addr.phone}</p>
+                            </div>
+                          </div>
+                        </label>
+                      ))}
+                    </div>
                   </div>
-                )}
 
-                {/* Items */}
-                <h2 className="font-semibold text-stone-800">Order Items ({items.length})</h2>
-                <div className="space-y-3">
-                  {items.map((item) => (
-                    <div key={item.variantId} className="card p-3 flex gap-3">
-                      <div className="relative w-14 h-18 flex-shrink-0 bg-stone-100 rounded-sm overflow-hidden">
-                        <Image src={item.image} alt={item.name} fill className="object-cover" />
+                  {showAddressForm && (
+                    <form onSubmit={handleSaveAddress} className="card mesh-panel p-6 sm:p-7">
+                      <h3 className="text-2xl font-extrabold text-stone-900">Add a new address</h3>
+                      <div className="mt-6 grid gap-4 sm:grid-cols-2">
+                        <div className="sm:col-span-2">
+                          <label className="label">Full name</label>
+                          <input className="input-field" value={newAddress.name} onChange={e => setNewAddress({ ...newAddress, name: e.target.value })} required />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <label className="label">Phone</label>
+                          <input className="input-field" value={newAddress.phone} onChange={e => setNewAddress({ ...newAddress, phone: e.target.value })} required />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <label className="label">Address line 1</label>
+                          <input className="input-field" value={newAddress.line1} onChange={e => setNewAddress({ ...newAddress, line1: e.target.value })} required />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <label className="label">Address line 2</label>
+                          <input className="input-field" value={newAddress.line2} onChange={e => setNewAddress({ ...newAddress, line2: e.target.value })} />
+                        </div>
+                        <div>
+                          <label className="label">City</label>
+                          <input className="input-field" value={newAddress.city} onChange={e => setNewAddress({ ...newAddress, city: e.target.value })} required />
+                        </div>
+                        <div>
+                          <label className="label">State</label>
+                          <input className="input-field" value={newAddress.state} onChange={e => setNewAddress({ ...newAddress, state: e.target.value })} required />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <label className="label">Pincode</label>
+                          <input className="input-field" value={newAddress.pincode} onChange={e => setNewAddress({ ...newAddress, pincode: e.target.value })} required />
+                        </div>
                       </div>
-                      <div className="flex-1 text-sm">
-                        <p className="font-medium text-stone-800 line-clamp-1">{item.name}</p>
-                        <p className="text-stone-500 text-xs">{item.color} · {item.size} · Qty: {item.quantity}</p>
-                        <p className="font-semibold mt-1">₹{(item.price * item.quantity).toLocaleString('en-IN')}</p>
+                      <label className="mt-5 flex items-center gap-2 text-sm text-stone-600">
+                        <input type="checkbox" className="accent-brand-600" checked={newAddress.isDefault} onChange={e => setNewAddress({ ...newAddress, isDefault: e.target.checked })} />
+                        Set as default address
+                      </label>
+                      <div className="mt-6 flex flex-wrap gap-3">
+                        <button type="submit" className="btn-primary">Save address</button>
+                        <button type="button" onClick={() => setShowAddressForm(false)} className="btn-secondary">Cancel</button>
+                      </div>
+                    </form>
+                  )}
+
+                  <button
+                    onClick={() => { if (selectedAddress) setStep('review'); else alert('Please select an address'); }}
+                    disabled={!selectedAddress}
+                    className="btn-primary w-full disabled:opacity-50"
+                  >
+                    Continue to review
+                  </button>
+                </>
+              )}
+
+              {step === 'review' && (
+                <>
+                  <button onClick={() => setStep('address')} className="btn-ghost">Back to address</button>
+
+                  {addresses.find(a => a.id === selectedAddress) && (
+                    <div className="card mesh-panel p-6">
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">Delivering to</p>
+                      {(() => {
+                        const a = addresses.find(addr => addr.id === selectedAddress)!;
+                        return (
+                          <p className="mt-3 text-sm leading-7 text-stone-700">
+                            {a.name}, {a.line1}, {a.city}, {a.state} - {a.pincode}
+                          </p>
+                        );
+                      })()}
+                    </div>
+                  )}
+
+                  <div className="card p-6 sm:p-7">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">Review</p>
+                        <h2 className="mt-2 text-2xl font-extrabold text-stone-900">Check every item before you pay.</h2>
                       </div>
                     </div>
-                  ))}
-                </div>
 
-                <button onClick={handlePlaceOrder} disabled={loading}
-                  className="btn-primary w-full text-center text-base py-4 disabled:opacity-60">
-                  {loading ? 'Processing...' : `Pay ₹${grandTotal.toLocaleString('en-IN')} via Razorpay`}
-                </button>
-                <p className="text-xs text-center text-stone-400">🔒 Secured by Razorpay. All payment info is encrypted.</p>
-              </div>
-            )}
-          </div>
+                    <div className="mt-6 space-y-4">
+                      {items.map((item) => (
+                        <div key={item.variantId} className="flex flex-col gap-4 rounded-[24px] bg-stone-50 p-4 sm:flex-row sm:items-center">
+                          <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[20px] bg-stone-100 sm:h-24 sm:w-20 sm:flex-shrink-0">
+                            <Image src={item.image} alt={item.name} fill className="object-cover" />
+                          </div>
+                          <div className="flex-1 text-sm">
+                            <p className="font-semibold text-stone-900">{item.name}</p>
+                            <p className="mt-1 text-stone-500">{item.color} | {item.size} | Qty {item.quantity}</p>
+                          </div>
+                          <p className="text-base font-extrabold text-stone-900">Rs. {(item.price * item.quantity).toLocaleString('en-IN')}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
 
-          {/* Order summary sidebar */}
-          <div className="lg:w-64 flex-shrink-0">
-            <div className="card p-5 sticky top-24">
-              <h3 className="font-semibold text-stone-800 mb-4">Price Details</h3>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between text-stone-600">
-                  <span>MRP Total</span><span>₹{total().toLocaleString('en-IN')}</span>
-                </div>
-                <div className="flex justify-between text-stone-600">
-                  <span>Shipping</span>
-                  {shipping === 0 ? <span className="text-green-600">FREE</span> : <span>₹{shipping}</span>}
-                </div>
-                <div className="border-t border-stone-200 pt-2 flex justify-between font-bold text-stone-800">
-                  <span>Amount Payable</span><span>₹{grandTotal.toLocaleString('en-IN')}</span>
+                  <button onClick={handlePlaceOrder} disabled={loading} className="btn-primary w-full text-base disabled:opacity-60">
+                    {loading ? 'Processing...' : `Pay Rs. ${grandTotal.toLocaleString('en-IN')} with Razorpay`}
+                  </button>
+                </>
+              )}
+            </div>
+
+            <div className="lg:sticky lg:top-28 lg:h-fit">
+              <div className="card mesh-panel p-6 sm:p-7">
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">Price details</p>
+                <div className="mt-5 space-y-4 text-sm text-stone-600">
+                  <div className="flex justify-between">
+                    <span>Items total</span>
+                    <span>Rs. {total().toLocaleString('en-IN')}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span>Shipping</span>
+                    {shipping === 0 ? <span className="font-semibold text-green-700">Free</span> : <span>Rs. {shipping}</span>}
+                  </div>
+                  <div className="border-t border-stone-200 pt-4">
+                    <div className="flex justify-between text-lg font-extrabold text-stone-900">
+                      <span>Amount payable</span>
+                      <span>Rs. {grandTotal.toLocaleString('en-IN')}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
       </div>
     </>
   );

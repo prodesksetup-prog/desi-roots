@@ -10,91 +10,108 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
-        <p className="text-6xl mb-6">🛍️</p>
-        <h2 className="font-display text-2xl font-bold text-stone-700 mb-3">Your cart is empty</h2>
-        <p className="text-stone-500 mb-6">Looks like you haven't added anything yet.</p>
-        <Link href="/products" className="btn-primary">Start Shopping</Link>
+      <div className="section-shell flex min-h-[60vh] flex-col items-center justify-center text-center">
+        <div className="card mesh-panel max-w-xl px-8 py-14">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-stone-500">Your bag is empty</p>
+          <h2 className="mt-4 font-display text-5xl text-stone-900">Start curating your next look.</h2>
+          <p className="mx-auto mt-4 max-w-md text-sm leading-7 text-stone-600">
+            Save sarees, kurtis, and festive edits here while you build the full wardrobe.
+          </p>
+          <Link href="/products" className="btn-primary mt-8">
+            Start shopping
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10">
-      <h1 className="font-display text-3xl font-bold text-stone-800 mb-8">Shopping Cart</h1>
-
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Items */}
-        <div className="flex-1 space-y-4">
-          {items.map((item) => (
-            <div key={item.variantId} className="card p-4 flex gap-4">
-              <div className="relative w-20 h-28 flex-shrink-0 bg-stone-100 rounded-sm overflow-hidden">
-                <Image src={item.image} alt={item.name} fill className="object-cover" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <h3 className="font-medium text-stone-800 text-sm leading-snug line-clamp-2">{item.name}</h3>
-                <p className="text-xs text-stone-500 mt-1">
-                  {item.color} · Size: {item.size}
-                </p>
-                <p className="font-semibold text-stone-800 mt-2">₹{item.price.toLocaleString('en-IN')}</p>
-              </div>
-              <div className="flex flex-col items-end justify-between">
-                <button
-                  onClick={() => removeItem(item.variantId)}
-                  className="text-stone-400 hover:text-red-500 transition-colors"
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-                <div className="flex items-center gap-2">
-                  <button onClick={() => updateQty(item.variantId, item.quantity - 1)}
-                    className="w-7 h-7 border border-stone-300 rounded-sm text-sm hover:border-brand-400 transition-colors">−</button>
-                  <span className="w-6 text-center text-sm font-medium">{item.quantity}</span>
-                  <button onClick={() => updateQty(item.variantId, item.quantity + 1)}
-                    className="w-7 h-7 border border-stone-300 rounded-sm text-sm hover:border-brand-400 transition-colors">+</button>
-                </div>
-                <p className="font-semibold text-sm">₹{(item.price * item.quantity).toLocaleString('en-IN')}</p>
-              </div>
-            </div>
-          ))}
+    <div className="pb-10">
+      <section className="section-shell pt-8">
+        <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <span className="eyebrow">Shopping bag</span>
+            <h1 className="mt-4 font-display text-5xl leading-none text-stone-900 sm:text-6xl">Everything you are about to wear.</h1>
+            <p className="mt-3 section-copy">Review quantities, keep favorites, and move to checkout when the edit feels right.</p>
+          </div>
+          <Link href="/products" className="btn-ghost">Continue browsing</Link>
         </div>
 
-        {/* Summary */}
-        <div className="lg:w-72 flex-shrink-0">
-          <div className="card p-6 sticky top-24">
-            <h2 className="font-semibold text-stone-800 text-lg mb-4">Order Summary</h2>
-            <div className="space-y-3 text-sm">
-              <div className="flex justify-between text-stone-600">
-                <span>Subtotal ({items.reduce((s, i) => s + i.quantity, 0)} items)</span>
-                <span>₹{total().toLocaleString('en-IN')}</span>
+        <div className="grid gap-6 lg:grid-cols-[1fr,360px]">
+          <div className="space-y-4">
+            {items.map((item) => (
+              <div key={item.variantId} className="card p-4 sm:p-5">
+                <div className="flex flex-col gap-4 sm:flex-row">
+                  <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[24px] bg-stone-100 sm:h-36 sm:w-28 sm:flex-shrink-0">
+                    <Image src={item.image} alt={item.name} fill className="object-cover" />
+                  </div>
+                  <div className="flex flex-1 flex-col justify-between gap-5">
+                    <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                      <div>
+                        <h3 className="text-lg font-semibold text-stone-900">{item.name}</h3>
+                        <p className="mt-1 text-sm text-stone-500">{item.color} | Size {item.size}</p>
+                        <p className="mt-3 text-lg font-extrabold text-stone-900">Rs. {item.price.toLocaleString('en-IN')}</p>
+                      </div>
+                      <button
+                        onClick={() => removeItem(item.variantId)}
+                        className="text-sm font-semibold text-red-600 hover:text-red-700"
+                      >
+                        Remove
+                      </button>
+                    </div>
+
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                      <div className="flex items-center gap-3 rounded-full bg-stone-50 px-3 py-2">
+                        <button onClick={() => updateQty(item.variantId, item.quantity - 1)} className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-lg font-semibold shadow-sm">
+                          -
+                        </button>
+                        <span className="w-8 text-center text-base font-bold">{item.quantity}</span>
+                        <button onClick={() => updateQty(item.variantId, item.quantity + 1)} className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-lg font-semibold shadow-sm">
+                          +
+                        </button>
+                      </div>
+                      <p className="text-lg font-extrabold text-stone-900">Rs. {(item.price * item.quantity).toLocaleString('en-IN')}</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="flex justify-between text-stone-600">
-                <span>Shipping</span>
-                {shipping === 0
-                  ? <span className="text-green-600 font-medium">FREE</span>
-                  : <span>₹{shipping}</span>
-                }
+            ))}
+          </div>
+
+          <div className="lg:sticky lg:top-28 lg:h-fit">
+            <div className="card mesh-panel p-6 sm:p-7">
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">Order summary</p>
+              <h2 className="mt-3 text-2xl font-extrabold text-stone-900">Ready when you are.</h2>
+
+              <div className="mt-6 space-y-4 text-sm text-stone-600">
+                <div className="flex justify-between">
+                  <span>Subtotal ({items.reduce((s, i) => s + i.quantity, 0)} items)</span>
+                  <span>Rs. {total().toLocaleString('en-IN')}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Shipping</span>
+                  {shipping === 0 ? <span className="font-semibold text-green-700">Free</span> : <span>Rs. {shipping}</span>}
+                </div>
+                {shipping > 0 && (
+                  <div className="rounded-[22px] bg-white/80 px-4 py-4 text-xs font-semibold uppercase tracking-[0.14em] text-brand-700">
+                    Add Rs. {(999 - total()).toLocaleString('en-IN')} more for free shipping
+                  </div>
+                )}
+                <div className="border-t border-stone-200 pt-4">
+                  <div className="flex justify-between text-lg font-extrabold text-stone-900">
+                    <span>Total</span>
+                    <span>Rs. {grandTotal.toLocaleString('en-IN')}</span>
+                  </div>
+                </div>
               </div>
-              {shipping > 0 && (
-                <p className="text-xs text-brand-600 bg-brand-50 px-3 py-2 rounded-sm">
-                  Add ₹{(999 - total()).toLocaleString('en-IN')} more for free shipping!
-                </p>
-              )}
-              <div className="border-t border-stone-200 pt-3 flex justify-between font-bold text-stone-800">
-                <span>Total</span>
-                <span>₹{grandTotal.toLocaleString('en-IN')}</span>
-              </div>
+
+              <Link href="/checkout" className="btn-primary mt-7 w-full">
+                Proceed to checkout
+              </Link>
             </div>
-            <Link href="/checkout" className="btn-primary w-full text-center block mt-6">
-              Proceed to Checkout
-            </Link>
-            <Link href="/products" className="btn-ghost text-center block mt-3 text-sm">
-              Continue Shopping
-            </Link>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

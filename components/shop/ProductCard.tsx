@@ -12,8 +12,7 @@ export default function ProductCard({ product }: { product: ProductWithDetails }
 
   return (
     <Link href={`/products/${product.slug}`} className="group block">
-      <div className="card overflow-hidden hover:shadow-md transition-shadow duration-300">
-        {/* Image */}
+      <div className="card overflow-hidden transition-all duration-500 group-hover:-translate-y-1 group-hover:shadow-[0_32px_90px_-48px_rgba(22,16,12,0.85)]">
         <div className="product-img-wrap relative aspect-[3/4] bg-stone-100">
           {primaryImage && (
             <Image
@@ -24,29 +23,45 @@ export default function ProductCard({ product }: { product: ProductWithDetails }
               sizes="(max-width: 768px) 50vw, 25vw"
             />
           )}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent opacity-80" />
           {discount > 0 && (
-            <span className="absolute top-2 left-2 badge bg-brand-600 text-white">
-              {discount}% OFF
+            <span className="badge absolute left-3 top-3 bg-white/92 text-stone-900">
+              {discount}% off
             </span>
           )}
           {!inStock && (
-            <div className="absolute inset-0 bg-white/60 flex items-center justify-center">
-              <span className="text-stone-600 font-medium text-sm">Out of Stock</span>
+            <div className="absolute inset-0 flex items-center justify-center bg-white/72 backdrop-blur-sm">
+              <span className="rounded-full bg-stone-900 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white">
+                Out of stock
+              </span>
             </div>
           )}
+          <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white">
+            <span className="rounded-full border border-white/30 bg-white/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.16em] backdrop-blur-sm">
+              {product.category.name}
+            </span>
+            <span className="text-sm font-semibold opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              Explore
+            </span>
+          </div>
         </div>
 
-        {/* Info */}
-        <div className="p-3">
-          <p className="text-xs text-stone-400 mb-1">{product.category.name}</p>
-          <h3 className="text-sm font-medium text-stone-800 line-clamp-2 leading-snug group-hover:text-brand-600 transition-colors">
+        <div className="space-y-3 p-4 sm:p-5">
+          <h3 className="line-clamp-2 text-lg font-semibold leading-snug text-stone-900 transition-colors group-hover:text-brand-700">
             {product.name}
           </h3>
-          <div className="flex items-center gap-2 mt-2">
-            <span className="font-semibold text-stone-800">₹{product.price.toLocaleString('en-IN')}</span>
+          <div className="flex items-end justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <span className="text-base font-extrabold text-stone-900">Rs. {product.price.toLocaleString('en-IN')}</span>
+              {product.comparePrice && (
+                <span className="text-xs text-stone-400 line-through">
+                  Rs. {product.comparePrice.toLocaleString('en-IN')}
+                </span>
+              )}
+            </div>
             {product.comparePrice && (
-              <span className="text-xs text-stone-400 line-through">
-                ₹{product.comparePrice.toLocaleString('en-IN')}
+              <span className="rounded-full bg-stone-100 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-stone-500">
+                Save {discount}%
               </span>
             )}
           </div>
