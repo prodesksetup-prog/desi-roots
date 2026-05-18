@@ -66,7 +66,7 @@ node prisma/seed.js
 This creates:
 - 4 categories (Sarees, Salwar Suits, Kurtis, Lehengas)
 - 8 sample products with variants
-- Admin user: `admin@rootsofcountry.in` / `admin@123`
+- Admin user: `admin@desiroots.in` / `admin@123`
 - Test customer: `test@example.com` / `customer@123`
 
 ### 7. Run Development Server

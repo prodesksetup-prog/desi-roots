@@ -55,7 +55,7 @@ export default function LoginPage() {
               </div>
               <div className="glass-card p-4">
                 <p className="text-xs uppercase tracking-[0.18em] text-stone-300">Admin demo</p>
-                <p className="mt-2 text-sm font-semibold text-white">admin@rootsofcountry.in</p>
+                <p className="mt-2 text-sm font-semibold text-white">admin@desiroots.in</p>
                 <p className="text-sm text-stone-300">admin@123</p>
               </div>
             </div>
