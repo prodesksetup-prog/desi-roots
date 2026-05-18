@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx @angular/cli@latest new angular-hello-world --routing=true --style=css --skip-git=true)",
+      "Bash(npm start *)",
+      "Bash(npm install *)",
+      "Bash(npx cap *)",
+      "Bash(npm run *)",
+      "Bash(rm *)",
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(exit 0)",
+      "Bash(mkdir *)"
+    ]
+  }
+}

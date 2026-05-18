@@ -33,8 +33,8 @@ export default function Navbar() {
       <div className="page-shell">
         <div className="mt-3 flex h-20 items-center justify-between rounded-[30px] border border-white/55 bg-[rgba(255,255,255,0.72)] px-4 shadow-[0_24px_80px_-46px_rgba(28,19,14,0.9)] backdrop-blur-xl sm:px-6">
           <Link href="/" className="flex flex-col leading-none">
-            <span className="font-display text-3xl font-semibold text-stone-900">Roots</span>
-            <span className="text-[10px] uppercase tracking-[0.4em] text-stone-500">of Country</span>
+            <span className="font-display text-3xl font-semibold text-stone-900">Desi</span>
+            <span className="text-[10px] uppercase tracking-[0.4em] text-stone-500">Roots</span>
           </Link>
 
           <nav className="hidden items-center gap-2 lg:flex">
@@ -86,10 +86,10 @@ export default function Navbar() {
             </Link>
 
             {session ? (
-              <div className="group relative hidden sm:block">
-                <button className="flex h-11 w-11 items-center justify-center rounded-full bg-stone-900 text-sm font-bold text-white">
-                  {session.user?.name?.charAt(0).toUpperCase()}
-                </button>
+              <div className="group relative block">
+                <button className="flex h-9 w-9 items-center justify-center rounded-full bg-stone-900 text-xs font-bold text-white transition-transform duration-200 hover:scale-105 sm:h-11 sm:w-11 sm:text-sm">
+    {session.user?.name?.charAt(0).toUpperCase()}
+  </button>
                 <div className="invisible absolute right-0 top-full mt-3 w-60 rounded-[24px] border border-stone-200 bg-white/95 p-3 opacity-0 shadow-[0_24px_70px_-38px_rgba(25,18,13,0.72)] transition-all duration-200 group-hover:visible group-hover:opacity-100">
                   <div className="rounded-[18px] bg-stone-50 px-4 py-3">
                     <p className="text-sm font-semibold text-stone-900">{session.user?.name}</p>
